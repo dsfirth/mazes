@@ -7,3 +7,5 @@ def binary_tree(grid):
 
         if(neighbors):
             cell.link(random.choice(neighbors))
+
+    return grid
