@@ -5,7 +5,7 @@ def binary_tree(grid):
     for cell in grid.each_cell():
         neighbors = list(filter(None, [cell.north, cell.east]))
 
-        if(neighbors):
+        if neighbors:
             cell.link(random.choice(neighbors))
 
     return grid

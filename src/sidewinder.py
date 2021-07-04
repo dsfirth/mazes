@@ -15,7 +15,7 @@ def sidewinder(grid):
             should_close_out = at_eastern_boundary or (
                 not at_northern_boundary and randrange(2) == 0)
 
-            if (should_close_out):
+            if should_close_out:
                 member = random.choice(run)
                 if (member.north):
                     member.link(member.north)
