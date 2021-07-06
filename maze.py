@@ -19,12 +19,12 @@ def grid(size, algorithm) -> None:
     rows, columns = size
     grid = Grid(rows, columns)
 
-    alg = {
+    algorithm_map = {
         'binary_tree': binary_tree,
         'sidewinder': sidewinder
     }
 
-    alg.get(algorithm)(grid)
+    algorithm_map.get(algorithm)(grid)
     print(grid)
 
 
