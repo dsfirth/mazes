@@ -14,24 +14,24 @@ class Grid:
         return self.__grid[row][column] if 0 <= row < self.rows and 0 <= column < self.columns else None
 
     def __str__(self):
-        output = "+" + "---+" * self.columns + "\n"
+        output = '+' + '---+' * self.columns + '\n'
 
         for row in self.each_row():
-            top = "|"
-            bottom = "+"
+            top = '|'
+            bottom = '+'
 
             for cell in row:
-                body = "   "  # that's THREE (3) spaces!
-                east_boundary = " " if cell.linked(cell.east) else "|"
+                body = '   '  # that's THREE (3) spaces!
+                east_boundary = ' ' if cell.linked(cell.east) else '|'
                 top += body + east_boundary
 
                 # three spaes below, too
-                south_boundary = "   " if cell.linked(cell.south) else "---"
-                corner = "+"
+                south_boundary = '   ' if cell.linked(cell.south) else '---'
+                corner = '+'
                 bottom += south_boundary+corner
 
-            output += top + "\n"
-            output += bottom + "\n"
+            output += top + '\n'
+            output += bottom + '\n'
 
         return output
 
