@@ -1,3 +1,6 @@
+import os
+import sys
+
 import click
 
 # algorithms
@@ -35,7 +38,17 @@ def grid(size, algorithm, output: click.File) -> None:
         'text': text_encoder
     }
 
-    encoder = 'png'
+    # determine the encoder -- based on the `--output`` value
+    encoder = 'text'
+    if output.name != '<stdout>':
+        # ensure the output doesn't exist
+        if os.path.exists(output.name):
+            raise click.BadParameter(
+                "File '% s' already exists!" % output.name,
+                param_hint="'--output'"
+            )
+
+    return
 
     algorithm_map.get(algorithm.lower())(grid)
     encoder_map.get(encoder.lower())(grid, output)
