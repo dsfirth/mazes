@@ -1,7 +1,6 @@
-import os
-import sys
-
 import click
+import os
+
 
 # algorithms
 from src.algorithm.binary_tree import binary_tree
@@ -41,14 +40,23 @@ def grid(size, algorithm, output: click.File) -> None:
     # determine the encoder -- based on the `--output`` value
     encoder = 'text'
     if output.name != '<stdout>':
-        # ensure the output doesn't exist
-        if os.path.exists(output.name):
-            raise click.BadParameter(
-                "File '% s' already exists!" % output.name,
-                param_hint="'--output'"
-            )
+        # use `--output` filename extension
+        _, ext = os.path.splitext(output.name)
+        match ext.lower():
+            case '.png':
+                encoder = 'png'
+            case _:
+                raise click.BadParameter(
+                    "Output file '% s' format not supported (expected: .png)" % output.name,
+                    param_hint="'--output'"
+                )
 
-    return
+        # ensure the output doesn't exist
+        # if os.path.exists(output.name):
+        #     raise click.BadParameter(
+        #         "File '% s' already exists!" % output.name,
+        #         param_hint="'--output'"
+        #     )
 
     algorithm_map.get(algorithm.lower())(grid)
     encoder_map.get(encoder.lower())(grid, output)
