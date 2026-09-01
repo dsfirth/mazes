@@ -1,16 +1,39 @@
+from enum import Enum
 import random
 
 from src.grid import Grid
 
-# Prim's algorithm
+State = Enum('State', [('FRONTIER', 1), ('IN', 2)])
+
+
 def prims(grid: Grid) -> Grid:
-    grid = [[0 for _ in range(grid.columns)] for _ in range(grid.rows)]
+    """
+    Prim's algorithm
+    """
+    explored = []
     frontier = []
 
     # init w/ random cell
-    frontier.append([random(range(grid.columns)), random(range(grid.rows))])
+    frontier.append(grid[random.randint(0, grid.rows - 1), random.randint(0, grid.columns - 1)])
 
-    # grow into a random `frontier` cell
+    # expand into a random `frontier` cell, and grow frontier into neighbour(s)
+    while frontier:
+        next = random.choice(frontier)
+        # print(f'expand into [{next.row}, {next.column}]')
 
+        # rather than tracking `explored`, use a property on the Cell (cell.state = FRONTIER | IN)
+        neighbours = filter(lambda c: c in explored, [next.north, next.east, next.south, next.west])
+        if neighbours:
+            previous = random.choice(neighbours)
+            previous.link(next)
+
+        explored.append(next)
+        frontier.remove(next)
+
+        for neighbour in filter(None, [next.north, next.east, next.south, next.west]):
+            if neighbour not in explored:
+                if neighbour not in frontier:
+                    # print(f'add [{neighbour.row}, {neighbour.column}] into frontier')
+                    frontier.append(neighbour)
 
     return grid
