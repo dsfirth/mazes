@@ -8,7 +8,12 @@ State = Enum('State', [('FRONTIER', 1), ('IN', 2)])
 
 def prims(grid: Grid) -> Grid:
     """
-    Prim's algorithm
+    Prim's algorithm is a greedy algorithm that finds a minimum spanning tree for a weighted
+    undirected graph:
+    1. Choose an arbitrary vertex (cell) from G (the maze) and add it to some (initially empty) set V,
+    2. Choose a random edge that connects a cell in V with another vertex (cell) _not_ in V,
+    3. Add that edge to the minimal spanning tree, and the edge's other vertex (cell) to V,
+    4. Repeat steps 2 and 3 until V includes every vertex (cell) in G (the maze).
     """
     explored = []
     frontier = []
