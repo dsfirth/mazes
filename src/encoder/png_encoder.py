@@ -18,6 +18,7 @@ def png_encoder(grid: Grid, output: click.File) -> None:
             row.extend(white_pixel)
         rows.append(row)
 
+    # idea: use modulo (%) and int(x / cell_size) to get grid cell
 
     # # Create from array
     # image_2d = [[255, 0, 0],    # Red pixel
