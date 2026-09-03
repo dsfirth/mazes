@@ -4,6 +4,7 @@ import click
 from src.grid import Grid
 
 from src.binary_tree import binary_tree
+from src.algorithm.prims import prims
 from src.sidewinder import sidewinder
 
 
@@ -14,13 +15,14 @@ def main():
 
 @main.command()
 @click.option('--size', '-s', nargs=2, default=(4, 4))
-@click.option('--algorithm', '--alg', '-a', type=click.Choice(['binary_tree', 'sidewinder'], case_sensitive=False), default='sidewinder')
+@click.option('--algorithm', '--alg', '-a', type=click.Choice(['binary_tree', 'prims', 'sidewinder'], case_sensitive=False), default='sidewinder')
 def grid(size, algorithm) -> None:
     rows, columns = size
     grid = Grid(rows, columns)
 
     algorithm_map = {
         'binary_tree': binary_tree,
+        'prims': prims,
         'sidewinder': sidewinder
     }
 
