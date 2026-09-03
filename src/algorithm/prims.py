@@ -3,8 +3,6 @@ import random
 
 from src.grid import Grid
 
-State = Enum('State', [('FRONTIER', 1), ('IN', 2)])
-
 
 def prims(grid: Grid) -> Grid:
     """
@@ -15,30 +13,35 @@ def prims(grid: Grid) -> Grid:
     3. Add that edge to the minimal spanning tree, and the edge's other vertex (cell) to V,
     4. Repeat steps 2 and 3 until V includes every vertex (cell) in G (the maze).
     """
-    explored = []
-    frontier = []
+    State = Enum('State', [('FRONTIER', 1), ('IN', 2)])
+
+    # track `state` on each cell
+    for cell in grid.each_cell():
+        cell.state = None
 
     # init w/ random cell
-    frontier.append(grid[random.randint(0, grid.rows - 1), random.randint(0, grid.columns - 1)])
+    start = grid[random.randint(0, grid.rows - 1), random.randint(0, grid.columns - 1)]
+    start.state = State.FRONTIER
+
+    frontier = [start]
 
     # expand into a random `frontier` cell, and grow frontier into neighbour(s)
     while frontier:
         next = random.choice(frontier)
-        # print(f'expand into [{next.row}, {next.column}]')
+        next.state = State.IN
 
         # rather than tracking `explored`, use a property on the Cell (cell.state = FRONTIER | IN)
-        neighbours = filter(lambda c: c in explored, [next.north, next.east, next.south, next.west])
-        if neighbours:
-            previous = random.choice(neighbours)
+        neighbours = list(filter(None, [next.north, next.east, next.south, next.west]))
+        frontierNeighbours = list(filter(lambda c: c is not None and c.state is State.IN, neighbours))
+        if frontierNeighbours:
+            previous = random.choice(frontierNeighbours)
             previous.link(next)
 
-        explored.append(next)
         frontier.remove(next)
 
-        for neighbour in filter(None, [next.north, next.east, next.south, next.west]):
-            if neighbour not in explored:
-                if neighbour not in frontier:
-                    # print(f'add [{neighbour.row}, {neighbour.column}] into frontier')
-                    frontier.append(neighbour)
+        # map the frontier cells
+        for neighbour in filter(lambda c: c.state is None, neighbours):
+            neighbour.state = State.FRONTIER
+            frontier.append(neighbour)
 
     return grid
