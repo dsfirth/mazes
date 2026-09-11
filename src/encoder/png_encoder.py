@@ -13,7 +13,7 @@ def png_encoder(grid: Grid, output: click.File) -> None:
     white_pixel = [255, 255, 255]
     width, height = cell_size * grid.columns + 1, cell_size * grid.rows + 1
 
-    # initialize an "grid" canvas
+    # initialize the maze canvas w/ all walls up
     rows = []
     for y in range(height):
         row = []
@@ -26,10 +26,18 @@ def png_encoder(grid: Grid, output: click.File) -> None:
 
         rows.append(row)
 
-    # now, link each linked "cell" by removing the walls from the "grid"
+    # remove walls between linked cells
     for row in grid.each_row():
         for cell in row:
-            break
+            # check east neighbour; if linked, ...
+            if cell.linked(cell.east):
+                # remove east wall
+                break
+
+            # check south neighbour; if linked, ...
+            if cell.linked(cell.south):
+                # remove south wall
+                break
 
     # add margin
     for _ in range(margin):
