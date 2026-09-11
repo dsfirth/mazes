@@ -13,19 +13,23 @@ def png_encoder(grid: Grid, output: click.File) -> None:
     white_pixel = [255, 255, 255]
     width, height = cell_size * grid.columns + 1, cell_size * grid.rows + 1
 
-    # initialize an empty canvas
+    # initialize an "grid" canvas
     rows = []
     for y in range(height):
         row = []
         for x in range(width):
             # Generate pixel values based on position
             if y % cell_size == 0 or x % cell_size == 0:
-                # idea: use modulo (%) and int(x / cell_size) to get grid cell
                 row.extend(black_pixel)
             else:
                 row.extend(white_pixel)
 
         rows.append(row)
+
+    # now, link each linked "cell" by removing the walls from the "grid"
+    for row in grid.each_row():
+        for cell in row:
+            break
 
     # add margin
     for _ in range(margin):
