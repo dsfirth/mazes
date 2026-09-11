@@ -20,6 +20,7 @@ def png_encoder(grid: Grid, output: click.File) -> None:
         for x in range(width):
             # Generate pixel values based on position
             if y % cell_size == 0 or x % cell_size == 0:
+                # idea: use modulo (%) and int(x / cell_size) to get grid cell
                 row.extend(black_pixel)
             else:
                 row.extend(white_pixel)
@@ -40,20 +41,6 @@ def png_encoder(grid: Grid, output: click.File) -> None:
 
     height += 2 * margin
     width += 2 * margin
-
-    # idea: use modulo (%) and int(x / cell_size) to get grid cell
-
-    # # Create from array
-    # image_2d = [[255, 0, 0],    # Red pixel
-    #             [0, 255, 0],    # Green pixel
-    #             [0, 0, 255]]    # Blue pixel
-    # for row in grid.each_row():
-    #     # initialize pixel rows for the grid row
-    #     pixel_rows = [[]] * cell_size
-
-    #     for cell in row:
-    #         for y in range(cell_size):
-    #             for x in range(cell_size):
 
     writer = png.Writer(width, height, bitdepth=8, greyscale=False)
     writer.write(output, rows)
