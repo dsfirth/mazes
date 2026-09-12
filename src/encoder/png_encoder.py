@@ -33,12 +33,14 @@ def png_encoder(grid: Grid, output: click.File) -> None:
             # check east neighbour; if linked, ...
             if cell.linked(cell.east):
                 # remove east wall
-                foo = 3
+                y, x = cell_size * cell.row + 1, 3 * cell_size * (cell.column + 1)
+                for yOffset in range(cell_size - 1):
+                    rows[y + yOffset][x:x + 3] = white_pixel
 
             # check south neighbour; if linked, ...
             if cell.linked(cell.south):
                 # remove south wall
-                y, x = cell_size * cell.row, 3 * cell_size * cell.column + 3
+                y, x = cell_size * (cell.row + 1), 3 * cell_size * cell.column + 3
                 rows[y][x:x + (3 * (cell_size - 1))] = white_pixel * (cell_size - 1)
 
     # add margin
