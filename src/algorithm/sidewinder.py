@@ -1,8 +1,9 @@
-from random import randrange
 import random
 
+from src.grid import Grid
 
-def sidewinder(grid):
+
+def sidewinder(grid: Grid) -> Grid:
     for row in grid.each_row():
         run = []
 
@@ -13,7 +14,7 @@ def sidewinder(grid):
             at_northern_boundary = (cell.north is None)
 
             should_close_out = at_eastern_boundary or (
-                not at_northern_boundary and randrange(2) == 0)
+                not at_northern_boundary and random.randrange(2) == 0)
 
             if should_close_out:
                 member = random.choice(run)
