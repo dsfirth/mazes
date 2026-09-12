@@ -27,7 +27,6 @@ def png_encoder(grid: Grid, output: click.File) -> None:
         rows.append(row)
 
     # remove walls between linked cells
-    red_pixel = [255, 0, 0]
     for row in grid.each_row():
         for cell in row:
             # check east neighbour; if linked, ...
