@@ -11,7 +11,7 @@ margin = 5
 def png_encoder(grid: Grid, output: click.File) -> None:
     black_pixel = [0, 0, 0]
     white_pixel = [255, 255, 255]
-    width, height = cell_size * grid.columns + 1, cell_size * grid.rows + 1
+    height, width = cell_size * grid.rows + 1, cell_size * grid.columns + 1
 
     # initialize the maze canvas w/ all walls up
     rows = []
@@ -27,17 +27,19 @@ def png_encoder(grid: Grid, output: click.File) -> None:
         rows.append(row)
 
     # remove walls between linked cells
+    red_pixel = [255, 0, 0]
     for row in grid.each_row():
         for cell in row:
             # check east neighbour; if linked, ...
             if cell.linked(cell.east):
                 # remove east wall
-                break
+                foo = 3
 
             # check south neighbour; if linked, ...
             if cell.linked(cell.south):
                 # remove south wall
-                break
+                y, x = cell_size * cell.row, 3 * cell_size * cell.column + 3
+                rows[y][x:x + (3 * (cell_size - 1))] = white_pixel * (cell_size - 1)
 
     # add margin
     for _ in range(margin):
