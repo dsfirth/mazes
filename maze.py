@@ -54,11 +54,11 @@ def grid(size, algorithm, output: click.File) -> None:
                 )
 
         # ensure the output doesn't exist
-        # if os.path.exists(output.name):
-        #     raise click.BadParameter(
-        #         "File '% s' already exists!" % output.name,
-        #         param_hint="'--output'"
-        #     )
+        if os.path.exists(output.name):
+            raise click.BadParameter(
+                "File '% s' already exists!" % output.name,
+                param_hint="'--output'"
+            )
 
     algorithm_map.get(algorithm.lower())(grid)
     encoder_map.get(encoder.lower())(grid, output)
