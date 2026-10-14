@@ -6,6 +6,7 @@ import os
 from src.algorithm.binary_tree import binary_tree
 from src.algorithm.prims import prims
 from src.algorithm.sidewinder import sidewinder
+from src.algorithm.wilsons import wilsons
 
 # encoders
 from src.encoder.png_encoder import png_encoder
@@ -31,7 +32,8 @@ def grid(size, algorithm, output: click.File) -> None:
     algorithm_map = {
         'binary_tree': binary_tree,
         'prims': prims,
-        'sidewinder': sidewinder
+        'sidewinder': sidewinder,
+        'wilsons': wilsons
     }
 
     encoder_map = {
