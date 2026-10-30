@@ -1,8 +1,13 @@
-from cell import Cell
-from grid import Grid
+from src.cell import Cell
+from src.grid import Grid
 
 import enum
 import random
+
+
+def __mazefy(cell: Cell, field: list[Cell], state: any):
+    cell.state = state
+    field.remove(cell)
 
 
 def wilsons(grid: Grid) -> Grid:
@@ -22,20 +27,22 @@ def wilsons(grid: Grid) -> Grid:
         cell.state = None
 
     # init w/ random cell
-    mazefy(random.choice(field))
+    __mazefy(random.choice(field), field, State.MAZE)
 
     while field:
         # do a random walk
         start = random.choice(field)
-        path = [start] # ordered cells in the current walk
+        path = [start]  # ordered cells in the current walk
         head = start
 
         while head.state is not State.MAZE:
-            next.state = State.WALK # do this _after_ confirming cell is not already in the maze
-            next = random.choice(list(filter(None, [head.north, head.east, head.south, head.west])))
+            head.state = State.WALK # do this _after_ confirming cell is not already in the maze
+            next = random.choice(
+                list(filter(None, [head.north, head.east, head.south, head.west])))
 
             if next.state is State.WALK:
-                path = path[:path.index(next)] # erase everything in path after next
+                # erase everything in path after next
+                path = path[:path.index(next)]
             else:
                 path.append(next)
 
@@ -45,9 +52,7 @@ def wilsons(grid: Grid) -> Grid:
         for i in range(len(path) - 1):
             path[i].link(path[i + 1])
 
-    def mazefy(cell: Cell):
-        cell.state = State.MAZE
-        field.remove(cell)
-        return
+        for cell in path:
+            __mazefy(cell, field, State.MAZE)
 
     return grid
