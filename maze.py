@@ -22,7 +22,7 @@ def main():
 
 @main.command()
 @click.option('--size', '-s', nargs=2, default=(4, 4), help='Number of rows columns in the grid (default: 4 4)')
-@click.option('--algorithm', '--alg', '-a', type=click.Choice(['binary_tree', 'prims', 'sidewinder'], case_sensitive=False), default='sidewinder',
+@click.option('--algorithm', '--alg', '-a', type=click.Choice(['binary_tree', 'prims', 'sidewinder', 'wilsons'], case_sensitive=False), default='sidewinder',
               help='Maze generation algorithm (default: sidewinder).')
 @click.option('--output', '--out', '-o', type=click.File('wb'), default='-')
 def grid(size, algorithm, output: click.File) -> None:
