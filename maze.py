@@ -6,6 +6,7 @@ import os
 from src.algorithm.binary_tree import binary_tree
 from src.algorithm.prims import prims
 from src.algorithm.sidewinder import sidewinder
+from src.algorithm.wilsons import wilsons
 
 # encoders
 from src.encoder.png_encoder import png_encoder
@@ -21,17 +22,19 @@ def main():
 
 @main.command()
 @click.option('--size', '-s', nargs=2, default=(4, 4), help='Number of rows columns in the grid (default: 4 4)')
-@click.option('--algorithm', '--alg', '-a', type=click.Choice(['binary_tree', 'prims', 'sidewinder'], case_sensitive=False), default='sidewinder',
+@click.option('--algorithm', '--alg', '-a', type=click.Choice(['binary_tree', 'prims', 'sidewinder', 'wilsons'], case_sensitive=False), default='sidewinder',
               help='Maze generation algorithm (default: sidewinder).')
-@click.option('--output', '--out', '-o', type=click.File('wb'), default='-')
-def grid(size, algorithm, output: click.File) -> None:
+@click.option('--output', '--out', '-o', type=click.File('wb'), default='-', help='Output file (e.g. my_maze.png), or \'-\' for standard output (default).')
+@click.option('--force', '-f', is_flag=True, help='Overwrite the output file if it already exists; ignored when writing to standard output.')
+def grid(size, algorithm, output: click.File, force: bool) -> None:
     rows, columns = size
     grid = Grid(rows, columns)
 
     algorithm_map = {
         'binary_tree': binary_tree,
         'prims': prims,
-        'sidewinder': sidewinder
+        'sidewinder': sidewinder,
+        'wilsons': wilsons
     }
 
     encoder_map = {
@@ -54,7 +57,7 @@ def grid(size, algorithm, output: click.File) -> None:
                 )
 
         # ensure the output doesn't exist
-        if os.path.exists(output.name):
+        if not force and os.path.exists(output.name):
             raise click.BadParameter(
                 "File '% s' already exists!" % output.name,
                 param_hint="'--output'"
