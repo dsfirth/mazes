@@ -10,6 +10,12 @@ class Cell:
 
         self.__links = {}
 
+    def __repr__(self):
+        return f"({self.row}, {self.column})"
+
+    def __str__(self):
+        return f"({self.row}, {self.column})"
+
     def link(self, cell, bidi=True):
         self.__links[cell] = True
         if bidi:

@@ -6,8 +6,9 @@ import random
 
 
 def __mazefy(cell: Cell, field: list[Cell], state: any):
-    cell.state = state
-    field.remove(cell)
+    if cell.state is not state:
+        cell.state = state
+        field.remove(cell)
 
 
 def wilsons(grid: Grid) -> Grid:
@@ -36,13 +37,16 @@ def wilsons(grid: Grid) -> Grid:
         head = start
 
         while head.state is not State.MAZE:
-            head.state = State.WALK # do this _after_ confirming cell is not already in the maze
+            head.state = State.WALK  # do this _after_ confirming cell is not already in the maze
             next = random.choice(
                 list(filter(None, [head.north, head.east, head.south, head.west])))
 
             if next.state is State.WALK:
                 # erase everything in path after next
-                path = path[:path.index(next)]
+                loop = path[path.index(next) + 1:]
+                for cell in loop:
+                    cell.state = None
+                path = path[:path.index(next) + 1]
             else:
                 path.append(next)
 
