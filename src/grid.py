@@ -13,6 +13,9 @@ class Direction(enum.Enum):
 
 class Grid:
     def __init__(self, rows, columns):
+        if not (1 <= rows <= 200 and 1 <= columns <= 200):
+            raise ValueError('rows and columns must each be between 1 and 200')
+
         self.rows = rows
         self.columns = columns
 

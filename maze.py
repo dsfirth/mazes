@@ -21,11 +21,30 @@ def main():
 
 
 @main.command()
-@click.option('--size', '-s', nargs=2, default=(4, 4), help='Number of rows columns in the grid (default: 4 4)')
-@click.option('--algorithm', '--alg', '-a', type=click.Choice(['binary_tree', 'prims', 'sidewinder', 'wilsons'], case_sensitive=False), default='sidewinder',
-              help='Maze generation algorithm (default: sidewinder).')
-@click.option('--output', '--out', '-o', type=click.File('wb'), default='-', help='Output file (e.g. my_maze.png), or \'-\' for standard output (default).')
-@click.option('--force', '-f', is_flag=True, help='Overwrite the output file if it already exists; ignored when writing to standard output.')
+@click.option(
+    '--size', '-s',
+    nargs=2,
+    type=click.IntRange(min=1, max=200),
+    default=(4, 4),
+    help='Number of rows and columns, each between 1 and 200, in the grid (default: 4 4)'
+)
+@click.option(
+    '--algorithm', '--alg', '-a',
+    type=click.Choice(['binary_tree', 'prims', 'sidewinder', 'wilsons'], case_sensitive=False),
+    default='sidewinder',
+    help='Maze generation algorithm (default: sidewinder).'
+)
+@click.option(
+    '--output', '--out', '-o',
+    type=click.File('wb'),
+    default='-',
+    help='Output file (e.g. my_maze.png), or \'-\' for standard output (default).'
+)
+@click.option(
+    '--force', '-f',
+    is_flag=True,
+    help='Overwrite the output file if it already exists; ignored when writing to standard output.'
+)
 def grid(size, algorithm, output: click.File, force: bool) -> None:
     rows, columns = size
     grid = Grid(rows, columns)
@@ -44,15 +63,17 @@ def grid(size, algorithm, output: click.File, force: bool) -> None:
 
     # determine the encoder -- based on the `--output`` value
     encoder = 'text'
-    if output.name != '<stdout>':
+    if output is not click.get_binary_stream('stdout'):
         # use `--output` filename extension
         _, ext = os.path.splitext(output.name)
         match ext.lower():
             case '.png':
                 encoder = 'png'
+            case '.txt':
+                encoder = 'text'
             case _:
                 raise click.BadParameter(
-                    "Output file '% s' format not supported (expected: .png)" % output.name,
+                    "Output file '% s' format not supported (expected: .png|.txt)" % output.name,
                     param_hint="'--output'"
                 )
 
