@@ -1,10 +1,23 @@
 from src.cell import Cell
 
+import dataclasses
+import enum
+
+
+class Direction(enum.Enum):
+    NORTH = "north"
+    EAST = "east"
+    SOUTH = "south"
+    WEST = "west"
+
 
 class Grid:
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
+
+        self.__entrance = Opening(0, 0, Direction.NORTH)
+        self.__exit = Opening(rows - 1, columns - 1, Direction.SOUTH)
 
         self.__grid = self.prepare_grid()
         self.configure_cells()
@@ -13,27 +26,14 @@ class Grid:
         row, column = tuple
         return self.__grid[row][column] if 0 <= row < self.rows and 0 <= column < self.columns else None
 
-    def __str__(self):
-        output = '+' + '---+' * self.columns + '\n'
+    def passage_open(self, cell: Cell, side: Direction) -> bool:
+        neighbour = getattr(cell, side.value)
 
-        for row in self.each_row():
-            top = '|'
-            bottom = '+'
+        if neighbour is not None:
+            return cell.linked(neighbour)
 
-            for cell in row:
-                body = '   '  # that's THREE (3) spaces!
-                east_boundary = ' ' if cell.linked(cell.east) else '|'
-                top += body + east_boundary
-
-                # three spaes below, too
-                south_boundary = '   ' if cell.linked(cell.south) else '---'
-                corner = '+'
-                bottom += south_boundary+corner
-
-            output += top + '\n'
-            output += bottom + '\n'
-
-        return output
+        opening = Opening(cell.row, cell.column, side)
+        return opening == self.__entrance or opening == self.__exit
 
     def prepare_grid(self):
         grid = list()
@@ -63,3 +63,10 @@ class Grid:
     def each_row(self):
         for row in self.__grid:
             yield row
+
+
+@dataclasses.dataclass(frozen=True)
+class Opening:
+    row: int
+    column: int
+    side: Direction
