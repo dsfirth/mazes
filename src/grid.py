@@ -16,8 +16,8 @@ class Grid:
         self.rows = rows
         self.columns = columns
 
-        self.__entrance = Opening(0, 0, Direction.WEST)
-        self.__exit = Opening(rows - 1, columns - 1, Direction.EAST)
+        self.__entrance = Opening(0, 0, Direction.NORTH)
+        self.__exit = Opening(rows - 1, columns - 1, Direction.SOUTH)
 
         self.__grid = self.prepare_grid()
         self.configure_cells()
