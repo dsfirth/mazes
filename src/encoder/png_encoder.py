@@ -1,7 +1,7 @@
 import click
 import png
 
-from src.grid import Grid
+from src.grid import Direction, Grid
 
 # define some constants
 cell_size = 10
@@ -29,18 +29,31 @@ def png_encoder(grid: Grid, output: click.File) -> None:
     # remove walls between linked cells
     for row in grid.each_row():
         for cell in row:
+            # check for an open passage to the NORTH, if 1st row
+            if cell.row == 0 and grid.passage_open(cell, Direction.NORTH):
+                # remove north wall
+                y, x = cell_size * cell.row, 3 * cell_size * cell.column + 3
+                rows[y][x:x + (3 * (cell_size - 1))] = white_pixel * (cell_size - 1)
+
             # check east neighbour; if linked, ...
-            if cell.linked(cell.east):
+            if grid.passage_open(cell, Direction.EAST):
                 # remove east wall
                 y, x = cell_size * cell.row + 1, 3 * cell_size * (cell.column + 1)
                 for yOffset in range(cell_size - 1):
                     rows[y + yOffset][x:x + 3] = white_pixel
 
             # check south neighbour; if linked, ...
-            if cell.linked(cell.south):
+            if grid.passage_open(cell, Direction.SOUTH):
                 # remove south wall
                 y, x = cell_size * (cell.row + 1), 3 * cell_size * cell.column + 3
                 rows[y][x:x + (3 * (cell_size - 1))] = white_pixel * (cell_size - 1)
+
+            # check for an open passage to the WEST, if 1st column
+            if cell.column == 0 and grid.passage_open(cell, Direction.WEST):
+                # remove west wall
+                y, x = cell_size * cell.row + 1, 3 * cell_size * cell.column
+                for yOffset in range(cell_size - 1):
+                    rows[y + yOffset][x:x + 3] = white_pixel
 
     # add margin
     for _ in range(margin):
