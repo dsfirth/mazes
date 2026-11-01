@@ -24,7 +24,7 @@ class Cell:
     def unlink(self, cell, bidi=True):
         self.__links.pop(cell)
         if bidi:
-            cell.unlick(self, False)
+            cell.unlink(self, False)
 
     def links(self):
         return self.__links.keys()
